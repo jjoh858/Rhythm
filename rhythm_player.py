@@ -41,90 +41,82 @@ tempoLabel.pack()
 tempoSlider = Spinbox(root, from_= 10, to= 140)
 tempoSlider.pack()
 
-canvas = Canvas(root, width=300, height=300, highlightbackground="black", highlightthickness=1)
+canvas = Canvas(root, width=110, height=300, highlightbackground="black", highlightthickness=1)
 canvas.pack()
 
-def plotPoint(event):
-	global noteDesign
-	noteDesign = []
+counter = 0
 
-	for i in range(300):
-		noteDesign.append([0] * 300)
-		
-	blueColor = "#0096FF"
-	if ((event.x > 5 and event.x < 295) and (event.y > 5 and event.y < 295)):
-		x1 = (event.x - 5)
-		x2 = (event.x + 5)
-		y1 = (event.y - 5)
-		y2 = (event.y + 5)
-		canvas.create_oval(x1, y1, x2, y2, fill = blueColor, outline="")
-		for i in range(11):
-			for j in range(11):
-				noteDesign[x1 + i][y1 + j] = 1
+noteDesign = []
+for i in range(300):
+    noteDesign.append([0] * 110)
+
+def plotPoint(event):
+    global noteDesign
+    
+    blueColor = "#0096FF"
+    if ((event.x > 5 and event.x < 105) and (event.y > 5 and event.y < 295)):
+        x1 = (event.x - 5)
+        x2 = (event.x + 5)
+        y1 = (event.y - 5)
+        y2 = (event.y + 5)
+    canvas.create_oval(x1, y1, x2, y2, fill = blueColor, outline="")
+    for i in range(11):
+        for j in range(11):
+            noteDesign[y1 + i][x1 + j] = 1
 	
 root.bind('<B1-Motion>', plotPoint)
 
 notesLabel = Label(root, text = "")
 notesLabel.pack()
 
-def checkNote():
-	global noteDesign
+def checkNote(): 
 
-	print(noteDesign)
+    #Might implement later
+    # rowsToPop = []
 
-	rowsToPop = []
+    # for i in range(len(noteDesign)):
+    #     shouldBreak = True
+    #     for j in range(len(noteDesign)):
+    #         if (noteDesign[i][j] == 1):
+    #             shouldBreak = False
+    #     if shouldBreak == True:
+    #         rowsToPop.append(i)
 
-	for i in range(len(noteDesign)):
-		shouldBreak = True
-		for j in range(len(noteDesign)):
-			if (noteDesign[i][j] == 1):
-				shouldBreak = False
-		if shouldBreak == True:
-			rowsToPop.append(i)
-	
-	for i in range(len(rowsToPop) - 1, 0, -1):
-		noteDesign.pop(rowsToPop[i])
+    # for i in range(len(rowsToPop) - 1, 0, -1):
+    #     noteDesign.pop(rowsToPop[i])
 
-	columnToPopLeft = []
-	columnToPopRight = []
+    # columnToPopLeft = []
+    # columnToPopRight = []
+    # for i in range(len(noteDesign[0])):
+    #     shouldBreak = True
+    #     for j in range(len(noteDesign)):
+    #         if (noteDesign[j][i] == 1):
+    #             shouldBreak = False
+    #     if shouldBreak == True:
+    #         columnToPopLeft.append(i)
+    #     else:
+    #         break
 
-	for i in range(len(noteDesign[0])):
-		shouldBreak = True
-		for j in range(len(noteDesign)):
-			if (noteDesign[j][i] == 1):
-				shouldBreak = False
-		if shouldBreak == True:
-			columnToPopLeft.append(i)
-		else:
-			break
+    # for i in range(len(noteDesign[0]) - 1, 0, -1):
+    #     shouldBreak = True
+    #     for j in range(len(noteDesign)):
+    #         if (noteDesign[j][i] == 1):
+    #             shouldBreak = False
+    #     if shouldBreak == True:
+    #         columnToPopRight.append(i)
+    #     else:
+    #         break
 
-	for i in range(len(noteDesign[0]) - 1, 0, -1):
-		shouldBreak = True
-		for j in range(len(noteDesign)):
-			if (noteDesign[j][i] == 1):
-				shouldBreak = False
-		if shouldBreak == True:
-			columnToPopRight.append(i)
-		else:
-			break
+    # for j in range(len(noteDesign)):
+    #     for i in range(len(columnToPopRight)):
+    #         noteDesign[j].pop(columnToPopRight[i])
 
-	print(columnToPopRight)
-	print(columnToPopLeft)
+    # for j in range(len(noteDesign)):
+    #     for i in range(len(columnToPopLeft) - 1, 0, -1):
+    #         noteDesign[j].pop(columnToPopLeft[i])
 
-	for j in range(len(noteDesign)):
-		for i in range(len(columnToPopRight)):
-			noteDesign[j].pop(columnToPopRight[i])
+    addData(noteDesign)
 
-	for j in range(len(noteDesign)):
-		for i in range(len(columnToPopLeft) - 1, 0, -1):
-			noteDesign[j].pop(columnToPopLeft[i])
-	
-	# for i in range(len(noteDesign)):
-	# 	line = ""
-	# 	for j in range(len(noteDesign[0])):
-	# 		line = line + str(noteDesign[i][j])
-	# 	print(line)
-	
 addNote = Button(root, text = "Add Note", command = checkNote)
 addNote.pack()
 
@@ -142,5 +134,51 @@ def play():
 play_button = Button(root, text="Play Song", command=play)
 play_button.config(state = "disabled")
 play_button.pack(pady=20)
+
+def displayLists(input):
+    for i in range(len(input)):
+        line = ""
+        for j in range(len(input[i])):
+            line = line + str(input[i][j])
+        print(line)
+
+def addData(input):
+    cleanedData = input
+
+    cleanedWidth = len(cleanedData[0])
+    proportions = []
+
+    for i in range(len(cleanedData)):
+        currentProportions = []
+        currentData = cleanedData[i][0]
+        currentCounter = 0
+        for j in range(len(cleanedData[0])):
+            if (currentData != cleanedData[i][j]):
+                if currentCounter >= 3:
+                    currentProportions.append([cleanedData[i][j], currentCounter / cleanedWidth])
+                    currentCounter = 0
+                    currentData = cleanedData[i][j]                    
+            else:
+                currentCounter += 1
+        currentProportions.append([cleanedData[i][j], currentCounter / cleanedWidth])
+        proportions.append(currentProportions)
+
+    '''
+    -   :    What Type
+    +   :    New Line
+    |   :    New Note
+
+    '''
+
+    with open("/Users/test/Desktop/RhythmPlayer/quarterNote.txt", "a") as f:
+        line = ""
+        for i in range(len(proportions)):
+            for j in range(len(proportions[i])):
+                line = line + str(proportions[i][j][0]) + "-" + str(proportions[i][j][1])
+            line = line + "+"
+        line = line + "|"
+        f.write(line + "\n")
+
+    canvas.delete("all")
 
 root.mainloop()
